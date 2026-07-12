@@ -1,5 +1,6 @@
+import { RoleName, MaintenanceStatus } from '../prisma-enums';
 import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { MaintenanceStatus, RoleName } from '@prisma/client';
+;
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';

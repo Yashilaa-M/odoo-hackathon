@@ -1,5 +1,6 @@
+import { RoleName } from '../prisma-enums';
 import { Controller, Get, Res, UseGuards } from '@nestjs/common';
-import { RoleName } from '@prisma/client';
+;
 import { Response } from 'express';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';

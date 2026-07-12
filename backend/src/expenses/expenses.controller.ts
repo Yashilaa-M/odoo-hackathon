@@ -1,5 +1,6 @@
+import { RoleName, ExpenseCategory } from '../prisma-enums';
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { ExpenseCategory, RoleName } from '@prisma/client';
+;
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';

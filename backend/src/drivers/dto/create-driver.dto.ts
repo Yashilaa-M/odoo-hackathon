@@ -1,4 +1,5 @@
-import { DriverStatus } from '@prisma/client';
+import { DriverStatus } from '../../prisma-enums';
+;
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Max, Min } from 'class-validator';
 
 export class CreateDriverDto {

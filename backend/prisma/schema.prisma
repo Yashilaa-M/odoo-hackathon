@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -7,58 +7,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum RoleName {
-  FLEET_MANAGER
-  DRIVER
-  SAFETY_OFFICER
-  FINANCIAL_ANALYST
-}
-
-enum VehicleType {
-  TRUCK
-  VAN
-  BIKE
-}
-
-enum VehicleStatus {
-  AVAILABLE
-  ON_TRIP
-  IN_SHOP
-  RETIRED
-}
-
-enum DriverStatus {
-  AVAILABLE
-  ON_TRIP
-  OFF_DUTY
-  SUSPENDED
-}
-
-enum TripStatus {
-  DRAFT
-  DISPATCHED
-  COMPLETED
-  CANCELLED
-}
-
-enum MaintenanceStatus {
-  ACTIVE
-  CLOSED
-}
-
-enum ExpenseCategory {
-  TOLL
-  MAINTENANCE
-  FUEL
-  OTHER
-}
-
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
+  id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String   @map("password_hash")
   fullName     String   @map("full_name")
-  roleId       String   @map("role_id") @db.Uuid
+  roleId       String   @map("role_id")
   isActive     Boolean  @default(true) @map("is_active")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -75,24 +29,24 @@ model User {
 }
 
 model Role {
-  id          String   @id @default(uuid()) @db.Uuid
-  name        RoleName @unique
-  permissions Json?
+  id          String   @id @default(uuid())
+  name        String   @unique
+  permissions String?
   users       User[]
 
   @@map("roles")
 }
 
 model Vehicle {
-  id                 String        @id @default(uuid()) @db.Uuid
+  id                 String        @id @default(uuid())
   registrationNumber String        @unique @map("registration_number")
   nameModel          String        @map("name_model")
-  type               VehicleType
-  maxLoadCapacityKg  Decimal       @db.Decimal(10, 2) @map("max_load_capacity_kg")
-  odometerKm         Decimal       @default(0) @db.Decimal(10, 2) @map("odometer_km")
-  acquisitionCost    Decimal       @db.Decimal(12, 2) @map("acquisition_cost")
+  type               String
+  maxLoadCapacityKg  Float         @map("max_load_capacity_kg")
+  odometerKm         Float         @default(0) @map("odometer_km")
+  acquisitionCost    Float         @map("acquisition_cost")
   region             String?
-  status             VehicleStatus @default(AVAILABLE)
+  status             String        @default("AVAILABLE")
   createdAt          DateTime      @default(now()) @map("created_at")
   updatedAt          DateTime      @updatedAt @map("updated_at")
 
@@ -108,15 +62,15 @@ model Vehicle {
 }
 
 model Driver {
-  id                 String       @id @default(uuid()) @db.Uuid
-  userId             String?      @unique @map("user_id") @db.Uuid
+  id                 String       @id @default(uuid())
+  userId             String?      @unique @map("user_id")
   fullName           String       @map("full_name")
   licenseNumber      String       @unique @map("license_number")
   licenseCategory    String       @map("license_category")
-  licenseExpiryDate  DateTime     @db.Date @map("license_expiry_date")
+  licenseExpiryDate  DateTime     @map("license_expiry_date")
   contactNumber      String       @map("contact_number")
-  safetyScore        Decimal      @default(100) @db.Decimal(5, 2) @map("safety_score")
-  status             DriverStatus @default(AVAILABLE)
+  safetyScore        Float        @default(100) @map("safety_score")
+  status             String       @default("AVAILABLE")
   createdAt          DateTime     @default(now()) @map("created_at")
   updatedAt          DateTime     @updatedAt @map("updated_at")
 
@@ -129,18 +83,18 @@ model Driver {
 }
 
 model Trip {
-  id                String     @id @default(uuid()) @db.Uuid
+  id                String     @id @default(uuid())
   source            String
   destination       String
-  vehicleId         String     @map("vehicle_id") @db.Uuid
-  driverId          String     @map("driver_id") @db.Uuid
-  cargoWeightKg     Decimal    @db.Decimal(10, 2) @map("cargo_weight_kg")
-  plannedDistanceKm Decimal    @db.Decimal(10, 2) @map("planned_distance_km")
-  actualDistanceKm  Decimal?   @db.Decimal(10, 2) @map("actual_distance_km")
-  fuelConsumedL     Decimal?   @db.Decimal(10, 2) @map("fuel_consumed_l")
-  revenue           Decimal    @default(0) @db.Decimal(12, 2)
-  status            TripStatus @default(DRAFT)
-  createdBy         String?    @map("created_by") @db.Uuid
+  vehicleId         String     @map("vehicle_id")
+  driverId          String     @map("driver_id")
+  cargoWeightKg     Float      @map("cargo_weight_kg")
+  plannedDistanceKm Float      @map("planned_distance_km")
+  actualDistanceKm  Float?     @map("actual_distance_km")
+  fuelConsumedL     Float?     @map("fuel_consumed_l")
+  revenue           Float      @default(0)
+  status            String     @default("DRAFT")
+  createdBy         String?    @map("created_by")
   dispatchedAt      DateTime?  @map("dispatched_at")
   completedAt       DateTime?  @map("completed_at")
   cancelledAt       DateTime?  @map("cancelled_at")
@@ -160,15 +114,15 @@ model Trip {
 }
 
 model MaintenanceLog {
-  id          String            @id @default(uuid()) @db.Uuid
-  vehicleId   String            @map("vehicle_id") @db.Uuid
+  id          String            @id @default(uuid())
+  vehicleId   String            @map("vehicle_id")
   type        String
   description String?
-  cost        Decimal           @db.Decimal(12, 2)
-  status      MaintenanceStatus @default(ACTIVE)
+  cost        Float
+  status      String            @default("ACTIVE")
   openedAt    DateTime          @default(now()) @map("opened_at")
   closedAt    DateTime?         @map("closed_at")
-  createdBy   String?           @map("created_by") @db.Uuid
+  createdBy   String?           @map("created_by")
 
   vehicle Vehicle @relation(fields: [vehicleId], references: [id])
   creator User?   @relation(fields: [createdBy], references: [id])
@@ -179,13 +133,13 @@ model MaintenanceLog {
 }
 
 model FuelLog {
-  id         String   @id @default(uuid()) @db.Uuid
-  vehicleId  String   @map("vehicle_id") @db.Uuid
-  tripId     String?  @map("trip_id") @db.Uuid
-  liters     Decimal  @db.Decimal(10, 2)
-  cost       Decimal  @db.Decimal(10, 2)
-  loggedDate DateTime @db.Date @map("logged_date")
-  createdBy  String?  @map("created_by") @db.Uuid
+  id         String   @id @default(uuid())
+  vehicleId  String   @map("vehicle_id")
+  tripId     String?  @map("trip_id")
+  liters     Float
+  cost       Float
+  loggedDate DateTime @map("logged_date")
+  createdBy  String?  @map("created_by")
 
   vehicle Vehicle @relation(fields: [vehicleId], references: [id])
   trip    Trip?   @relation(fields: [tripId], references: [id])
@@ -197,14 +151,14 @@ model FuelLog {
 }
 
 model Expense {
-  id           String          @id @default(uuid()) @db.Uuid
-  vehicleId    String          @map("vehicle_id") @db.Uuid
-  tripId       String?         @map("trip_id") @db.Uuid
-  category     ExpenseCategory
-  amount       Decimal         @db.Decimal(12, 2)
+  id           String          @id @default(uuid())
+  vehicleId    String          @map("vehicle_id")
+  tripId       String?         @map("trip_id")
+  category     String
+  amount       Float
   description  String?
-  incurredDate DateTime        @db.Date @map("incurred_date")
-  createdBy    String?         @map("created_by") @db.Uuid
+  incurredDate DateTime        @map("incurred_date")
+  createdBy    String?         @map("created_by")
 
   vehicle Vehicle @relation(fields: [vehicleId], references: [id])
   trip    Trip?   @relation(fields: [tripId], references: [id])
@@ -217,12 +171,12 @@ model Expense {
 }
 
 model AuditLog {
-  id         String   @id @default(uuid()) @db.Uuid
-  actorId    String?  @map("actor_id") @db.Uuid
+  id         String   @id @default(uuid())
+  actorId    String?  @map("actor_id")
   action     String
   entityType String   @map("entity_type")
-  entityId   String   @map("entity_id") @db.Uuid
-  metadata   Json?
+  entityId   String   @map("entity_id")
+  metadata   String?
   createdAt  DateTime @default(now()) @map("created_at")
 
   actor User? @relation(fields: [actorId], references: [id])

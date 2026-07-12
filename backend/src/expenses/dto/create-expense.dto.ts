@@ -1,4 +1,5 @@
-import { ExpenseCategory } from '@prisma/client';
+import { ExpenseCategory } from '../../prisma-enums';
+;
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 
 export class CreateExpenseDto {

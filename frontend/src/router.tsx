@@ -1,11 +1,13 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppShell } from './components/layout/AppShell';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { DashboardPage } from './pages/DashboardPage';
 import { DriversPage } from './pages/DriversPage';
 import { FinancePage } from './pages/FinancePage';
+import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { MaintenancePage } from './pages/MaintenancePage';
+import { RegisterPage } from './pages/RegisterPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { TripsPage } from './pages/TripsPage';
 import { VehiclesPage } from './pages/VehiclesPage';
@@ -19,11 +21,19 @@ const UnauthorizedPage = () => (
 
 export const router = createBrowserRouter([
   {
+    path: '/',
+    element: <LandingPage />,
+  },
+  {
     path: '/login',
     element: <LoginPage />,
   },
   {
-    path: '/',
+    path: '/register',
+    element: <RegisterPage />,
+  },
+  {
+    path: '/dashboard',
     element: (
       <ProtectedRoute>
         <AppShell />
@@ -83,5 +93,10 @@ export const router = createBrowserRouter([
         element: <UnauthorizedPage />,
       },
     ],
+  },
+  // legacy redirect
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
   },
 ]);

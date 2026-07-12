@@ -1,5 +1,6 @@
+import { VehicleStatus, DriverStatus, TripStatus } from '../prisma-enums';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { DriverStatus, TripStatus, VehicleStatus } from '@prisma/client';
+;
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RealtimeGateway } from '../realtime/realtime.gateway';

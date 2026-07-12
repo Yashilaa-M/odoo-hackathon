@@ -1,4 +1,5 @@
-import { DriverStatus, ExpenseCategory, MaintenanceStatus, PrismaClient, RoleName, TripStatus, VehicleStatus, VehicleType } from '@prisma/client';
+import { RoleName, VehicleType, VehicleStatus, DriverStatus, TripStatus, MaintenanceStatus, ExpenseCategory } from '../src/prisma-enums';
+import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -14,9 +15,7 @@ async function main() {
         update: {},
         create: {
           name,
-          permissions: {
-            description: `Permissions for ${name}`,
-          },
+          permissions: JSON.stringify({}),
         },
       }),
     ),

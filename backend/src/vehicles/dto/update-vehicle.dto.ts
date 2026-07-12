@@ -1,4 +1,5 @@
-import { VehicleStatus, VehicleType } from '@prisma/client';
+import { VehicleType, VehicleStatus } from '../../prisma-enums';
+;
 import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class UpdateVehicleDto {

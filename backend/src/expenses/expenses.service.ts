@@ -1,5 +1,6 @@
+import { ExpenseCategory } from '../prisma-enums';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ExpenseCategory } from '@prisma/client';
+;
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RealtimeGateway } from '../realtime/realtime.gateway';

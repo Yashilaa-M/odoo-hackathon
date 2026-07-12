@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Req, Res, HttpStatus, HttpCode, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Req, Res, HttpStatus, HttpCode, UnauthorizedException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Public } from '../common/decorators/public.decorator';
 import { LocalAuthGuard } from '../common/guards/local-auth.guard';
@@ -19,13 +19,24 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    return { accessToken: result.accessToken, user: result.user };
+  }
 
-    return {
-      accessToken: result.accessToken,
-      user: result.user,
-    };
+  @Public()
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  async register(@Body() body: { fullName: string; email: string; password: string; role: string }, @Res({ passthrough: true }) res: Response) {
+    const result = await this.authService.register(body);
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return { accessToken: result.accessToken, user: result.user };
   }
 
   @Public()
@@ -42,10 +53,8 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      path: '/',
-    });
+    res.clearCookie('refreshToken', { httpOnly: true, path: '/' });
     return { success: true, message: 'Successfully logged out' };
   }
 }
+

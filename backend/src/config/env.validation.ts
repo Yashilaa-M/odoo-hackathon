@@ -28,6 +28,10 @@ class EnvironmentVariables {
 }
 
 export function validate(config: Record<string, unknown>) {
+  if (config.PORT) {
+    config.PORT = Number(config.PORT);
+  }
+  console.log('Validating config. PORT is:', config.PORT, 'typeof PORT:', typeof config.PORT);
   const validatedConfig = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
@@ -36,6 +40,7 @@ export function validate(config: Record<string, unknown>) {
   });
 
   if (errors.length > 0) {
+    console.log('Validation errors:', errors);
     throw new Error(errors.toString());
   }
   return validatedConfig;

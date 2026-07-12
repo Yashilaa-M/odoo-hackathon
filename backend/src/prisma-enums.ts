@@ -1,0 +1,8 @@
+
+export enum RoleName { FLEET_MANAGER = 'FLEET_MANAGER', DRIVER = 'DRIVER', SAFETY_OFFICER = 'SAFETY_OFFICER', FINANCIAL_ANALYST = 'FINANCIAL_ANALYST' }
+export enum VehicleType { TRUCK = 'TRUCK', VAN = 'VAN', BIKE = 'BIKE' }
+export enum VehicleStatus { AVAILABLE = 'AVAILABLE', ON_TRIP = 'ON_TRIP', IN_SHOP = 'IN_SHOP', RETIRED = 'RETIRED' }
+export enum DriverStatus { AVAILABLE = 'AVAILABLE', ON_TRIP = 'ON_TRIP', OFF_DUTY = 'OFF_DUTY', SUSPENDED = 'SUSPENDED' }
+export enum TripStatus { DRAFT = 'DRAFT', DISPATCHED = 'DISPATCHED', COMPLETED = 'COMPLETED', CANCELLED = 'CANCELLED' }
+export enum MaintenanceStatus { ACTIVE = 'ACTIVE', CLOSED = 'CLOSED' }
+export enum ExpenseCategory { TOLL = 'TOLL', MAINTENANCE = 'MAINTENANCE', FUEL = 'FUEL', OTHER = 'OTHER' }
